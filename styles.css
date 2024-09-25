@@ -1,0 +1,315 @@
+/* Yleiset tyylit */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+
+
+/* Hero-osion tyylit */
+
+
+/* Hero Section with Transparent Layer */
+.hero {
+    position: relative;
+    /* Position the hero section relatively to allow for absolute positioning of the overlay */
+    background-image: url('kuva/hero1.webp');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+    height: 100vh;
+    /* Full height of the viewport */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Transparent Overlay */
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Black background with 50% transparency */
+    z-index: 1;
+    /* Ensures overlay is on top of image but behind the text */
+}
+
+/* Hero Content */
+.hero-content {
+    position: relative;
+    /* Relative positioning to be on top of the overlay */
+    z-index: 2;
+    /* Ensures the text appears on top of the overlay */
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.hero-content h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+
+}
+
+.hero-content p {
+    font-size: 20px;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+
+}
+
+.hero-content .btn {
+    background-color: rgba(255, 255, 255, 0.7);
+
+    color: #333;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 18px;
+    border-radius: 5px;
+    z-index: 3;
+
+}
+
+.hero-content .btn:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+/*  for Responsiveness */
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 36px;
+
+    }
+
+    .hero-content p {
+        font-size: 18px;
+
+    }
+
+    .hero-content .btn {
+        font-size: 16px;
+        padding: 8px 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 28px;
+
+    }
+
+    .hero-content p {
+        font-size: 16px;
+
+    }
+
+    .hero-content .btn {
+        font-size: 14px;
+        padding: 6px 12px;
+    }
+}
+
+
+
+/* Ominaisuudet-osion tyylit */
+.features {
+    padding: 50px 20px;
+    text-align: center;
+    background-color: #fff;
+}
+
+.features h2 {
+    font-size: 36px;
+    margin-bottom: 30px;
+}
+
+/* Flexbox layout for feature items */
+.feature-list {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+
+.feature-item {
+    width: 30%;
+    margin-bottom: 20px;
+}
+
+.feature-item h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.feature-item p {
+    font-size: 16px;
+}
+
+/*  for Responsiveness */
+
+/* Tablets and smaller screens */
+@media (max-width: 768px) {
+    .feature-item {
+        width: 45%;
+        /* Feature items take up more space on smaller screens */
+    }
+
+    .features h2 {
+        font-size: 30px;
+        /* Smaller heading size for tablets */
+    }
+
+    .feature-item h3 {
+        font-size: 22px;
+    }
+
+    .feature-item p {
+        font-size: 14px;
+    }
+}
+
+/* Mobile devices */
+@media (max-width: 480px) {
+    .feature-item {
+        width: 100%;
+
+    }
+
+    .features h2 {
+        font-size: 26px;
+
+    }
+
+    .feature-item h3 {
+        font-size: 20px;
+    }
+
+    .feature-item p {
+        font-size: 14px;
+    }
+}
+
+/* Footer */
+footer {
+    background-color: #161617;
+    color: white;
+}
+
+
+
+
+/* Lomakkeen tyylit */
+
+.container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Custom styles for the form */
+/* .form-group {
+    margin-bottom: 1rem;
+}
+
+.error {
+    color: red;
+    font-size: 0.875rem;
+    display: block;
+    margin-top: 0.25rem;
+} */
+
+label {
+    margin: 10px 0 5px;
+}
+
+input {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+
+}
+
+button {
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+.strength {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: red;
+}
+
+/*  For Responsive */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+        margin: 20px auto;
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 24px;
+
+    }
+
+    button {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        width: 100%;
+        margin: 10px auto;
+    }
+
+    h1 {
+        font-size: 20px;
+
+    }
+
+    label,
+    input,
+    button {
+        font-size: 14px;
+
+    }
+}
