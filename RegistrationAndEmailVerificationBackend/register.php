@@ -88,11 +88,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Set a token expiry time (optional, here set to expire in 24 hours)
     $token_expiry = date('Y-m-d H:i:s', strtotime('+1 day'));
 
-    // Insert data into database, including role, verified, created_at fields
-    $insertQuery = "INSERT INTO Users (username, email, password, role, verified, created_at) 
+    // Insert data into database, including role, verified, created_at fields and verification token
+    $insertQuery = "INSERT INTO Users (username, email, password, role, verified, verification_token, token_expiry, created_at) 
                     VALUES (?, ?, ?, 'user', 0, NOW())";
     $stmt = $conn->prepare($insertQuery);
-    $stmt->bind_param("sss", $username, $email, $hashedPassword);
+    $stmt->bind_param("sss", $username, $email, $hashedPassword, $verification_token, $token_expiry);
 
     if ($stmt->execute()) {
         echo "Registration successful!";
