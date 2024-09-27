@@ -1,21 +1,22 @@
 /* Yleiset tyylit */
+html,
 body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
     background-color: #f5f5f5;
-    color: #333;
+    display: flex;
+    flex-direction: column;
+
+
+
 }
 
-
-
 /* Hero-osion tyylit */
-
-
 /* Hero Section with Transparent Layer */
 .hero {
     position: relative;
-    /* Position the hero section relatively to allow for absolute positioning of the overlay */
+    /* allow for absolute positioning of the overlay */
     background-image: url('kuva/hero1.webp');
     background-size: cover;
     background-position: center;
@@ -23,9 +24,9 @@ body {
     text-align: center;
     padding: 100px 20px;
     height: 100vh;
-    /* Full height of the viewport */
     display: flex;
     justify-content: center;
+    flex: 1;
     align-items: center;
 }
 
@@ -38,17 +39,14 @@ body {
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
-    /* Black background with 50% transparency */
+    backdrop-filter: blur(4px);
     z-index: 1;
-    /* Ensures overlay is on top of image but behind the text */
 }
 
 /* Hero Content */
 .hero-content {
     position: relative;
-    /* Relative positioning to be on top of the overlay */
     z-index: 2;
-    /* Ensures the text appears on top of the overlay */
     max-width: 800px;
     margin: 0 auto;
     text-align: center;
@@ -69,8 +67,7 @@ body {
 }
 
 .hero-content .btn {
-    background-color: rgba(255, 255, 255, 0.7);
-
+    background-color: rgb(221, 211, 211);
     color: #333;
     padding: 10px 20px;
     text-decoration: none;
@@ -81,7 +78,7 @@ body {
 }
 
 .hero-content .btn:hover {
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgb(233, 233, 174);
 }
 
 /*  for Responsiveness */
@@ -161,12 +158,12 @@ body {
 @media (max-width: 768px) {
     .feature-item {
         width: 45%;
-        /* Feature items take up more space on smaller screens */
+
     }
 
     .features h2 {
         font-size: 30px;
-        /* Smaller heading size for tablets */
+
     }
 
     .feature-item h3 {
@@ -182,7 +179,7 @@ body {
 @media (max-width: 480px) {
     .feature-item {
         width: 100%;
-
+        margin-bottom: 10px;
     }
 
     .features h2 {
@@ -203,6 +200,13 @@ body {
 footer {
     background-color: #161617;
     color: white;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    margin-top: auto;
+    width: 100%;
+
+
 }
 
 
@@ -215,9 +219,12 @@ footer {
     margin: 50px auto;
     padding: 20px;
     background-color: #fff;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    flex-grow: 1;
+
 }
+
 
 h1 {
     text-align: center;
@@ -227,11 +234,43 @@ h1 {
 form {
     display: flex;
     flex-direction: column;
+    margin-bottom: 10px;
+
+}
+
+input:focus {
+    border-color: #E8E8E8;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+    outline: none;
 }
 
 /* Custom styles for the form */
-/* .form-group {
-    margin-bottom: 1rem;
+
+label {
+    margin-bottom: 5px;
+    font-size: 1rem;
+}
+
+form label {
+    display: block;
+}
+
+form input {
+    margin-bottom: 20px;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+
+}
+
+/* Error and success messages */
+
+
+.success {
+    color: green;
+    margin-bottom: 15px;
 }
 
 .error {
@@ -239,18 +278,13 @@ form {
     font-size: 0.875rem;
     display: block;
     margin-top: 0.25rem;
-} */
-
-label {
-    margin: 10px 0 5px;
 }
+
 
 input {
     padding: 10px;
-    margin-bottom: 15px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    width: 100%;
     box-sizing: border-box;
 
 }
@@ -263,13 +297,17 @@ button {
     cursor: pointer;
     border-radius: 5px;
     font-size: 16px;
+    margin-top: 15px;
+    width: auto;
 }
 
 button:hover {
     background-color: #218838;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .strength {
+    /* for password strength        */
     display: block;
     margin-bottom: 10px;
     font-size: 14px;
@@ -277,6 +315,31 @@ button:hover {
 }
 
 /*  For Responsive */
+@media (min-width: 1024px) {
+    .container {
+        max-width: 500px;
+        padding: 30px;
+    }
+
+    h1 {
+        font-size: 32px;
+    }
+
+    label {
+        font-size: 1.1rem;
+    }
+
+    input,
+    button {
+        font-size: 16px;
+        padding: 12px;
+    }
+
+    button {
+        font-size: 18px;
+    }
+}
+
 @media (max-width: 768px) {
     .container {
         width: 90%;
@@ -298,6 +361,7 @@ button:hover {
 @media (max-width: 480px) {
     .container {
         width: 100%;
+        padding: 10px;
         margin: 10px auto;
     }
 
@@ -312,4 +376,37 @@ button:hover {
         font-size: 14px;
 
     }
+}
+
+
+/* CSS for styling confirmation link */
+.confirmation-link {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.confirmation-link a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.confirmation-link a:hover {
+    text-decoration: underline;
+}
+
+
+/* CSS for styling login link */
+.login-link {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.login-link a {
+    color: #007bff;
+    text-decoration: none;
+    width: fit-content;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
 }
