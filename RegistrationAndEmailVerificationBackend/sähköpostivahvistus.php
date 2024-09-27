@@ -28,21 +28,27 @@ function sendVerificationEmail($email, $verification_token) {
         $mail->setFrom('your-email@example.com', 'Your Site Name');
         $mail->addAddress($email); // Add the recipient
 
-        // Content
-        $mail->isHTML(true); // Set email format to HTML
-        $mail->Subject = 'Verify Your Email Address';  
-
-        // Create the verification link
-        $verificationLink = "http://yourdomain.com/verify.php?token=" . urlencode($verification_token);
-
-        $mailContent = "
-            <h1>Email Verification</h1>
-            <p>Thank you for registering. Please click the link below to verify your email address:</p>
-            <a href='$verificationLink'>Verify Email</a>
-            <p>This link will expire in 24 hours.</p>
+        //Content
+        $mail->isHTML(true);                                  // Set email format to HTML
+        $mail->Subject = 'Verify Your Email Address';
+        $verification_link = "http://$domain/verify.php?token=$verification_token";
+        $mail->Body    = "
+            <html>
+            <head>
+                <title>Email Verification</title>
+            </head>
+            <body>
+                <p>Thank you for registering!</p>
+                <p>Please click the link below to verify your email address:</p>
+                <a href='$verification_link'>Verify your email</a>
+                <p>If the link does not work, copy and paste the following URL into your browser:</p>
+                <p>$verification_link</p>
+            </body>
+            </html>
         ";
 
-        $mail->Body = $mailContent;
+        $mail->AltBody = 'Please verify your email by visiting the following link: ' . $verification_link;
+
 
         // Send the email
         $mail->send();
