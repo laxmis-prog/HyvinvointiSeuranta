@@ -8,6 +8,9 @@ require 'vendor/autoload.php'; // Include PHPMailer via Composer
 function sendVerificationEmail($email, $verification_token) {
     $mail = new PHPMailer(true);
 
+    // Create a new PHPMailer instance
+    $mail = new PHPMailer(true);
+
     try {
         //Server settings
         $mail->isSMTP();

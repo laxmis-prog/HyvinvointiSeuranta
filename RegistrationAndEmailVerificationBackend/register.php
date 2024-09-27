@@ -104,7 +104,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         session_regenerate_id(true);  // Secure session regeneration
 
 
-        session_regenerate_id(true);  // Secure session regeneration
     } else {
         echo "Error: " . $stmt->error;
     }
@@ -114,50 +113,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 }
 
-// PHPMailer function to send verification email
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+include "sähköpostivahvistus.php";
 
-require 'vendor/autoload.php'; // Include PHPMailer via Composer
-
-function sendVerificationEmail($email, $verification_token) {
-    $mail = new PHPMailer(true);
-
-    try {
-        //Server settings
-        $mail->isSMTP();
-        $mail->Host       = 'smtp.example.com'; // SMTP server (use smtp.gmail.com for Gmail)
-        $mail->SMTPAuth   = true;
-        $mail->Username   = 'your-email@example.com'; // SMTP username
-        $mail->Password   = 'your-password'; // SMTP password
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = 587;
-
-        //Recipients
-        $mail->setFrom('your-email@example.com', 'Your Site Name');
-        $mail->addAddress($email); // Add the recipient
-
-        // Content
-        $mail->isHTML(true); // Set email format to HTML
-        $mail->Subject = 'Verify Your Email Address';
-        
-        // Create the verification link
-        $verificationLink = "http://yourdomain.com/verify.php?token=$verification_token";
-        $mailContent = "
-            <h1>Email Verification</h1>
-            <p>Thank you for registering. Please click the link below to verify your email address:</p>
-            <a href='$verificationLink'>Verify Email</a>
-            <p>This link will expire in 24 hours.</p>
-        ";
-
-        $mail->Body = $mailContent;
-
-        // Send the email
-        $mail->send();
-        echo 'Verification email has been sent.';
-
-    } catch (Exception $e) {
-        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-    }
-}
 ?>
