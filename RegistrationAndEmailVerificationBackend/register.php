@@ -1,5 +1,8 @@
 
 <?php
+
+include "sähköpostivahvistus.php";
+
 // Start session
 session_start();
 

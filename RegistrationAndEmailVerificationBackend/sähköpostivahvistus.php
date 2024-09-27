@@ -1,5 +1,7 @@
 <?php
 
+include "config.php"; // Include the database configuration file
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -8,7 +10,6 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 require 'vendor/autoload.php'; // Include PHPMailer via Composer
-
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") { // Check if the request method is POST
