@@ -11,6 +11,9 @@ function sendVerificationEmail($email, $verification_token) {
     // Create a new PHPMailer instance
     $mail = new PHPMailer(true);
 
+    // Your website domain (adjust as needed)
+    $domain = "localhost";  // Replace with your actual domain
+
     try {
         //Server settings
         $mail->isSMTP();
