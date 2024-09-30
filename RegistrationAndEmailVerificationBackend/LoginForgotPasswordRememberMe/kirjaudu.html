@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kirjautuminen</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="kirjaudu.css" />
+  </head>
+  <body>
+    <div class="login-container">
+      <form class="login-form">
+        <h2>Kirjaudu</h2>
+        <div class="input-group">
+          <label for="Username">Käyttäjätunnus</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Anna käyttäjätunnus"
+            required
+          />
+        </div>
+        <div class="input-group">
+          <label for="password">Salasana</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Anna salasana"
+            required
+          />
+        </div>
+        <div class="input-group remember-me">
+          <input type="checkbox" id="remember" name="remember" />
+          <label for="remember">Muista minut</label>
+        </div>
+        <button type="submit" class="login-btn">Kirjaudu</button>
+        <a href="#" class="forgot-password">Unohditko salasanasi?</a>
+      </form>
+    </div>
+  </body>
+</html>
