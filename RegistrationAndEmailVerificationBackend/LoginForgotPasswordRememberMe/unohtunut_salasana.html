@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unohditko salasanan?</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        width: 100%;
+        max-width: 400px;
+        margin: 100px auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+        text-align: center;
+        color: #333;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #555;
+      }
+      input[type="email"] {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+      }
+      .error-message {
+        color: red;
+        font-size: 14px;
+        display: none;
+      }
+      .submit-btn {
+        width: 100%;
+        padding: 12px;
+        background-color: #28a745;
+        border: none;
+        border-radius: 4px;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      .submit-btn:hover {
+        background-color: #218838;
+      }
+      .success-message {
+        text-align: center;
+        color: green;
+        font-size: 16px;
+        margin-top: 10px;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Unohditko salasanan?</h2>
+      <form id="forgotPasswordForm" onsubmit="return validateForm()">
+        <div class="form-group">
+          <label for="email">Syötä sähköpostiosoitteesi</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="esim. sinä@esimerkki.com"
+          />
+          <span class="error-message" id="error-message"
+            >Syötä kelvollinen sähköpostiosoite</span
+          >
+        </div>
+        <button type="submit" class="submit-btn">Palauta salasana</button>
+        <div class="success-message" id="success-message">
+          Salasanan palautusohjeet on lähetetty sähköpostiisi.
+        </div>
+      </form>
+    </div>
+
+    <script>
+      function validateForm() {
+        const emailInput = document.getElementById("email");
+        const errorMessage = document.getElementById("error-message");
+        const successMessage = document.getElementById("success-message");
+
+        // Yksinkertainen sähköpostin tarkistussääntö
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        // Nollataan viestit
+        errorMessage.style.display = "none";
+        successMessage.style.display = "none";
+
+        if (!emailPattern.test(emailInput.value)) {
+          errorMessage.style.display = "block";
+          return false; // Estetään lomakkeen lähetys, jos sähköposti on virheellinen
+        }
+
+        // Jos validointi onnistuu, näytetään onnistumisviesti
+        successMessage.style.display = "block";
+      }
+    </script>
+  </body>
+</html>
