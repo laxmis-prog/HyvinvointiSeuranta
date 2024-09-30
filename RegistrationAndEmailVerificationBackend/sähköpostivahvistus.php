@@ -1,90 +1,89 @@
 <?php
 
-include "config.php"; // Include the database configuration file
+include "config.php"; // Sisällytä tietokannan asetustiedosto
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'vendor/autoload.php'; // Include PHPMailer via Composer
+require 'vendor/autoload.php'; // Sisällytä PHPMailer Composerin kautta
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") { // Tarkista, onko pyyntö POST
+    // Puhdista ja trimmaa sähköposti
+    $sahkoposti = htmlspecialchars(trim($_POST['email'])); // Hanki ja puhdista sähköposti POST-pyynnöstä
+    $vahvistustoken = bin2hex(random_bytes(50)); // Luo satunnainen token
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") { // Check if the request method is POST
-    $email = trim($_POST['email']); // Get the email from the POST request
-    $verification_token = bin2hex(random_bytes(50)); // Generate a random token
-
-    // Store the token in the database
+    // Tallenna token tietokantaan
     $sql = "INSERT INTO email_verification (email, token) VALUES (?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss", $email, $verification_token);
+    $stmt->bind_param("ss", $sahkoposti, $vahvistustoken);
 
-    // Execute the statement and and check if it was successful
+    // Suorita lauseke ja tarkista, onnistuiko se
     if ($stmt->execute()) {
-//call the function to send the verification email only if the token was stored successfully
-sendVerificationEmail($email, $verification_token);
-        echo "Verification token stored successfully.";
+        // Kutsu funktiota lähettääksesi vahvistussähköposti vain jos token tallennettiin onnistuneesti
+        if (lahetaVahvistusSahkoposti($sahkoposti, $vahvistustoken)) {
+            echo "Vahvistussähköposti lähetettiin onnistuneesti.";
+        } else {
+            echo "Virhe vahvistussähköpostin lähettämisessä.";
+        }
     } else {
-        echo "Error storing token in the database: " . $stmt->error; // Error handling
+        echo "Virhe tokenin tallentamisessa tietokantaan: " . $stmt->error; // Virheenkäsittely
     }
-    }
+}
 
-function sendVerificationEmail($email, $verification_token) {
-    $mail = new PHPMailer(true); // Create a new PHPMailer instance
+function lahetaVahvistusSahkoposti($sahkoposti, $vahvistustoken) {
+    $mail = new PHPMailer(true); // Luo uusi PHPMailer-instanssi
 
-    // SMTP settings
-    // Your website domain (adjust as needed)
-    $domain = "localhost";  // Replace with your actual domain
+    // SMTP asetukset
+    // Verkkosivustosi domain (säädä tarpeen mukaan)
+    $domain = "localhost";  // Korvata oikealla domainilla
 
     try {
-        //Server settings
+        // Palvelinasetukset
         $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com'; // SMTP server (use smtp.gmail.com for Gmail)
-        $mail->SMTPAuth   = true; // Enable SMTP authentication
-        $mail->Username   = getenv('SMTP_USERNAME'); // Use environment variable or config
-        $mail->Password   = getenv('SMTP_PASSWORD'); // Use environment variable or config
+        $mail->Host       = 'smtp.gmail.com'; // SMTP-palvelin (käytä smtp.gmail.com Gmailille)
+        $mail->SMTPAuth   = true; // Ota käyttöön SMTP-todennus
+        $mail->Username   = 'r02481933@gmail.com'; // Sähköpostiosoitteesi
+        $mail->Password   = 'lgsi jroj ihfs fnoc'; // Sovelluksen salasana
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = 587; // TCP port to connect to
+        $mail->Port       = 587; // TCP-portti, johon yhdistetään
 
-        //Recipients
-        $mail->setFrom('your-email@example.com', 'Your Site Name');
-        $mail->addAddress($email); // Add the recipient
+        // Vastaanottajat
+        $mail->setFrom('r02481933@gmail.com', 'Sivustosi Nimi');
+        $mail->addAddress($sahkoposti); // Lisää vastaanottaja
 
-        //Content
-        $mail->isHTML(true);                                  // Set email format to HTML
-        $mail->Subject = 'Verify Your Email Address';
-        $verification_link = "http://$domain/verify.php?token=$verification_token";
+        // Sisältö
+        $mail->isHTML(true); // Aseta sähköpostin muoto HTML:ksi
+        $mail->Subject = 'Vahvista sähköpostiosoitteesi';
+        $vahvistuslinkki = "http://$domain/verify.php?token=$vahvistustoken";
         $mail->Body    = "
             <html>
             <head>
-                <title>Email Verification</title>
+                <title>Sähköpostin vahvistus</title>
             </head>
             <body>
-                <p>Thank you for registering!</p>
-                <p>Please click the link below to verify your email address:</p>
-                <a href='$verification_link'>Verify your email</a>
-                <p>If the link does not work, copy and paste the following URL into your browser:</p>
-                <p>$verification_link</p>
+                <p>Kiitos rekisteröitymisestä!</p>
+                <p>Ole hyvä ja napsauta alla olevaa linkkiä vahvistaaksesi sähköpostiosoitteesi:</p>
+                <a href='$vahvistuslinkki'>Vahvista sähköpostisi</a>
+                <p>Jos linkki ei toimi, kopioi ja liitä seuraava URL-osoite selaimeesi:</p>
+                <p>$vahvistuslinkki</p>
             </body>
             </html>
         ";
 
-        $mail->AltBody = 'Please verify your email by visiting the following link: ' . $verification_link;
+        $mail->AltBody = 'Vahvista sähköpostisi vierailemalla seuraavassa linkissä: ' . $vahvistuslinkki;
 
-
-        // Send the email
+        // Lähetä sähköposti
         $mail->send();
-        echo 'Verification email has been sent.';
+        return true; // Palauta true, jos sähköposti lähetettiin onnistuneesti
 
     } catch (Exception $e) {
-        error_log("Mailer Error: {$mail->ErrorInfo}"); // Log the error
-        echo "Message could not be sent. Please try again later.";
+        error_log("Mailer Error: {$mail->ErrorInfo}"); // Kirjaa virhe
+        echo "Viestiä ei voitu lähettää. Yritä myöhemmin uudelleen.";
+        return false; // Palauta false, jos sähköposti epäonnistui
     }
 }
-
 ?>
-
-
 
