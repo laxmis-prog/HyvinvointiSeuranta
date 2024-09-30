@@ -1,25 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Registration</title>
+    <title>Rekisteröinti</title>
   </head>
   <body>
-    <h2>Register</h2>
+    <h2>Rekisteröidy</h2>
 
-    <!-- Registration Form -->
+    <!-- Rekisteröintilomake -->
     <form action="register.php" method="POST">
-      <input type="text" name="username" placeholder="Username" required />
-      <input type="email" name="email" placeholder="Email" required />
-      <input type="password" name="password" placeholder="Password" required />
+      <input type="text" name="username" placeholder="Käyttäjänimi" required />
+      <input
+        type="email"
+        name="email"
+        placeholder="Sähköpostiosoite"
+        required
+      />
+      <input type="password" name="password" placeholder="Salasana" required />
       <input
         type="password"
         name="confirm_password"
-        placeholder="Confirm Password"
+        placeholder="Vahvista salasana"
         required
       />
-      <button type="submit">Register</button>
+      <button type="submit">Rekisteröidy</button>
     </form>
   </body>
 </html>

@@ -1,44 +1,44 @@
 
 <?php
 
-include "sähköpostivahvistus.php";
+include "sähköpostivahvistus.php"; // Liitetään sähköpostivahvistus-skripti
 
-// Start session
+// Aloitetaan istunto
 session_start();
 
-// Enable error reporting for debugging
+// Otetaan virheiden raportointi käyttöön virheiden korjaamista varten
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "Hyvinvointi";
+// Tietokantayhteys
+$servername = "localhost"; // Tietokannan palvelimen osoite
+$username = "root"; // Tietokannan käyttäjänimi
+$password = ""; // Tietokannan salasana
+$dbname = "Hyvinvointi"; // Tietokannan nimi
 
-// Create connection
+// Luodaan yhteys
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
+// Tarkistetaan yhteys
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die("Yhteyden muodostaminen epäonnistui: " . $conn->connect_error);
 }
 
-// Check if form is submitted
+// Tarkistetaan, onko lomake lähetetty
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = trim($_POST['username']);
-    $email = trim($_POST['email']);
-    $password = trim($_POST['password']);
-    $confirm_password = trim($_POST['confirm_password']);  
+    $username = trim($_POST['username']); // Käyttäjänimi
+    $email = trim($_POST['email']); // Sähköposti
+    $password = trim($_POST['password']); // Salasana
+    $confirm_password = trim($_POST['confirm_password']); // Vahvistussalasana  
 
-    // Validate passwords match
+    // Tarkistetaan, että salasanat täsmäävät
     if ($password !== $confirm_password) {
-        echo "Passwords do not match.";
+        echo "Salasanat eivät täsmää.";
         exit;
     }
 
-    // Validate username uniqueness
+    // Tarkistetaan käyttäjänimen ainutlaatuisuus
     $usernameCheckQuery = "SELECT * FROM Users WHERE username = ?";
     $stmt = $conn->prepare($usernameCheckQuery);
     $stmt->bind_param("s", $username);
@@ -46,19 +46,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        echo "Username is already taken.";
-        $result->free();  // Free the result set
+        echo "Käyttäjänimi on jo varattu.";
+        $result->free();  // Vapautetaan tulosjoukko
         exit;
     }
-    $result->free();  // Free the result set
+    $result->free();  // Vapautetaan tulosjoukko
 
-    // Validate email format
+    // Tarkistetaan sähköpostin muoto
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo "Invalid email format.";
+        echo "Virheellinen sähköpostimuoto.";
         exit;
     }
 
-    // Validate email uniqueness
+    // Tarkistetaan sähköpostin ainutlaatuisuus
     $emailCheckQuery = "SELECT * FROM Users WHERE email = ?";
     $stmt = $conn->prepare($emailCheckQuery);
     $stmt->bind_param("s", $email);
@@ -66,56 +66,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        echo "Email is already registered.";
-        $result->free();  // Free the result set
+        echo "Sähköposti on jo rekisteröity.";
+        $result->free();  // Vapautetaan tulosjoukko
         exit;
     }
-    $result->free();  // Free the result set
+    $result->free();  // Vapautetaan tulosjoukko
 
-    // Validate password strength
+    // Tarkistetaan salasanan vahvuus
     if (strlen($password) < 8 || 
         !preg_match('/[A-Z]/', $password) || 
         !preg_match('/[a-z]/', $password) || 
         !preg_match('/[0-9]/', $password) || 
         !preg_match('/[\W]/', $password)) {
-        echo "Password must be at least 8 characters long and include uppercase, lowercase, numbers, and special characters.";
+        echo "Salasanan on oltava vähintään 8 merkkiä pitkä ja sisältävä isoja ja pieniä kirjaimia, numeroita ja erikoismerkkejä.";
         exit;
     }
 
-    // Hash the password
+    // Hashtoidaan salasana
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    // Generate a secure random verification token
+    // Luodaan turvallinen satunnaisluku vahvistustokeniksi
     $verification_token = bin2hex(random_bytes(16));
 
-    // Set a token expiry time (optional, here set to expire in 24 hours)
+    // Asetetaan tokenin voimassaoloaika (valinnainen, tässä 24 tunniksi)
     $token_expiry = date('Y-m-d H:i:s', strtotime('+1 day'));
 
-    // Insert data into database, including role, verified, created_at fields and verification token
+    // Lisätään tiedot tietokantaan
     $insertQuery = "INSERT INTO Users (username, email, password, role, verified, verification_token, token_expiry, created_at) 
                     VALUES (?, ?, ?, 'user', 0, ?, ?, NOW())";
     $stmt = $conn->prepare($insertQuery);
     $stmt->bind_param("sssss", $username, $email, $hashedPassword, $verification_token, $token_expiry);
 
     if ($stmt->execute()) {
-        echo "Registration successful!";
+        echo "Rekisteröinti onnistui!";
 
-        // Send verification email
-        sendVerificationEmail($email, $verification_token); // Call the function to send the email
+        // Lähetetään vahvistussähköposti
+        if (lahetaVahvistusSahkoposti($email, $verification_token)) { // Kutsutaan sähköpostin lähetysfunkti
 
-        echo "Please check your email to verify your account.";
-        session_regenerate_id(true);  // Secure session regeneration
+            echo "Tarkista sähköpostisi vahvistaaksesi tilisi.";
+            session_regenerate_id(true);  // Turvallinen istunnon uudistaminen
+        } else {
+            echo "Virhe: " . $stmt->error;
+        }
 
-
-    } else {
-        echo "Error: " . $stmt->error;
+        // Suljetaan lausunnot ja yhteys
+        $stmt->close();
+        $conn->close();
     }
-
-    // Close statements and connection
-    $stmt->close();
-    $conn->close();
 }
-
-include "sähköpostivahvistus.php";
-
 ?>
