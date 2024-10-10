@@ -1,0 +1,87 @@
+body {
+    background: #90d8c1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+
+.card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.card-left {
+    background-color: #00796B;
+    color: white;
+    padding: 2rem;
+}
+
+.card-right {
+    background-color: white;
+    padding: 2rem;
+}
+
+.btn-primary {
+    background-color: #43cea2;
+    border-color: #43cea2;
+}
+
+.btn-primary:hover {
+    background-color: #68baa3;
+    border-color: #3ab793;
+}
+
+.form-control:focus {
+    border-color: #43cea2;
+    box-shadow: 0 0 0 0.2rem rgba(67, 206, 162, 0.25);
+}
+
+
+
+.forgot-password {
+    color: #43cea2;
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* footer {
+    background-color: #161617;
+    color: white;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    margin-top: 20px;
+    width: 100%;
+
+
+} */

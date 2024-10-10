@@ -1,18 +1,45 @@
+
+
 <?php
-$errors=[];
-$success= '';
+include "db_connect.php";
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email =trim($_POST['email']);
+// Check if the email is set in the URL
+if (isset($_GET['email'])) {
+    $sähköposti = urldecode($_GET['email']);
 
-    // Validate email
-if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-    $errors[] = "Virheellinen sähköpostiosoite.";
-}else{
-    $success = "vahvistusviesti lähetetty sähköpostiisi.";
+    // Look for the email in the database
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+    $stmt->bind_param("s", $sähköposti);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+
+    if ($row['status'] === 'confirmed') {
+        $message = "Sähköpostisi on jo vahvistettu.";
+    } else {
+        // Update the user's status to 'confirmed'
+        $stmt = $conn->prepare("UPDATE users SET status = 'confirmed' WHERE email = ?");
+        $stmt->bind_param("s", $sähköposti);
+        if ($stmt->execute()) {
+            $message = "Sähköpostisi on vahvistettu onnistuneesti.";
+        } else {
+            $message = "Virhe sähköpostin vahvistamisessa.";
+        }
+    }
+} else {
+    $message = "Sähköpostia ei löytynyt.";
 }
+
+$stmt->close();
+} else {
+$message = "Sähköpostiosoitetta ei ole asetettu.";
 }
-?>
+
+$conn->close();
+?>       
+
 
 
 
@@ -29,34 +56,13 @@ if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
 </head>
 
 <body>
-    <div class="container">
-        <div class= "sub-container">
-        <h1>Sähköpostivahvistus</h1>
-        <p>Ole hyvä ja tarkista sähköpostisi vahvistaaksesi rekisteröitymisen.</p>
-     
-        <?php if (!empty($errors)): ?>
-            <div class="alert alert-danger">
-                <ul>
-                    <?php foreach ($errors as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        <?php endif; ?>
-        <?php if ($success): ?>
-            <div class="alert alert-success">
-               <p> <?php echo htmlspecialchars( $success); ?></p>
-            </div>
-        <?php endif; ?>
-
-    <form action="sähköpostivahvistus.php" method="post">
-            <label for="email">Sähköposti:</label>
-            <input type="email" id="email" name="email" required>
-            <button type="submit">Lähetä Vahvistus</button>
-        </form>
-    </div>
+    
+<div class="container">
+        <h1>Sähköpostin vahvistus</h1>
+        <p><?php echo htmlspecialchars($message); ?></p>
+        <a href="kirjaudu.php" class="btn btn-primary">Kirjaudu sisään</a>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <?php include 'footer.php'; ?>   
 </body>
 </html>
