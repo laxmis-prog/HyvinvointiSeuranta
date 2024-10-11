@@ -63,6 +63,6 @@ $conn->close();
         <a href="kirjaudu.php" class="btn btn-primary">Kirjaudu sisään</a>
     </div>
 
-    <?php include 'footer.php'; ?>   
+  
 </body>
 </html>

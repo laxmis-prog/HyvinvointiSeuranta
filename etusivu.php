@@ -232,7 +232,7 @@
                     <div class="card h-100 text-center p-4">
                         <div class="display-4 mb-3 text-primary">1</div>
                         <h5 class="card-title">Rekisteröidy ilmaiseksi</h5>
-                        <p class="card-text">Luo tili muutamassa minuutissa ja aloita 14 päivän ilmainen kokeilu.</p>
+                        <p class="card-text">Luo tili muutamassa minuutissa ja aloita ilmainen kokeilu.</p>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -299,7 +299,7 @@
     <
     <section class="cta-section py-5">
         <div class="container text-center">
-           <a href="rekisteroityminen.php" class="btn btn-light btn-lg">Aloita 14 päivän ilmainen kokeilu</a>
+           <a href="rekisteroityminen.php" class="btn btn-light btn-lg">Aloita ilmainen kokeilu</a>
         </div>
     </section>
 
